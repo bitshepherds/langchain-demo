@@ -26,30 +26,30 @@ install:
 # Approach 1: Basic Agent
 run-basic:
 	@echo "Running basic LangGraph agent..."
-	@source .venv/bin/activate && python main.py
+	@.venv/bin/python main.py
 
 # Approach 2: Tracing (same as basic, but with LangSmith enabled)
 run-tracing:
 	@echo "Running agent with LangSmith tracing enabled..."
-	@source .venv/bin/activate && python main.py
+	@.venv/bin/python main.py
 
 # Approach 3: Testing
 pytest:
-	@source .venv/bin/activate && pytest tests/ -v
+	@.venv/bin/python -m pytest tests/ -v
 
 test-query:
-	@source .venv/bin/activate && echo "What is 25 + 17?" | python main.py
+	@echo "What is 25 + 17?" | .venv/bin/python main.py
 
 # Approach 4: Evaluation
 upload:
-	@source .venv/bin/activate && python scripts/upload_dataset.py
+	@.venv/bin/python scripts/upload_dataset.py
 
 run-evaluation:
-	@source .venv/bin/activate && python scripts/run_evaluation.py
+	@.venv/bin/python scripts/run_evaluation.py
 
 # Approach 5: DSPy
 dspy:
-	@source .venv/bin/activate && python scripts/dspy_example.py
+	@.venv/bin/python scripts/dspy_example.py
 
 # Legacy alias
 run: run-basic
