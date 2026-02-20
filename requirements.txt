@@ -1,0 +1,7 @@
+langchain>=0.3
+langgraph>=0.2
+langchain-ollama>=0.1
+wikipedia>=1.4
+python-dotenv>=1.0
+pytest>=9.0
+dspy-ai>=3.0
