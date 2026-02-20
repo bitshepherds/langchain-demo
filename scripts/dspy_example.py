@@ -21,10 +21,10 @@ import dspy
 from dspy.teleprompt import MIPROv2
 from dspy.evaluate import answer_exact_match
 
-# Model configuration - use smaller model to demonstrate DSPy optimization
-# llama3.2:1b is ~1.3GB (smaller, needs prompt optimization)
-# llama3.2 is ~2GB (larger, already performs well)
-MODEL = "ollama/llama3.2:1b"
+# Model configuration - use llama3.2 for DSPy optimization
+# llama3.2:1b is too small for structured DSPy output
+# llama3.2 is capable enough to show optimization on harder tasks
+MODEL = "ollama/llama3.2"
 
 print(f"Configuring DSPy with Ollama ({MODEL})...")
 dspy.configure(lm=dspy.LM(MODEL))
@@ -32,10 +32,16 @@ dspy.configure(lm=dspy.LM(MODEL))
 
 # Define Signature (the "interface" - what we want, not how to ask)
 class AgentSignature(dspy.Signature):
-    """Answer user questions accurately and concisely."""
+    """You are a factual question answering system.
+    Provide accurate answers to user questions.
+
+    Guidelines:
+    - For math problems, give numeric answers (e.g., "12" not "twelve")
+    - For factual questions, give the correct entity name
+    - Keep answers short and factual"""
 
     question = dspy.InputField(desc="The user's question")
-    answer = dspy.OutputField(desc="A concise, factual answer")
+    answer = dspy.OutputField(desc="A short factual answer, numeric for math")
 
 
 # Create Module (wraps signature with ChainOfThought prompting strategy)
@@ -96,10 +102,16 @@ print("=" * 60)
 baseline_agent = QuestionAnsweringAgent()
 
 baseline_correct = 0
+print("\n--- Dev Set Results ---")
 for example in devset:
     prediction = baseline_agent(question=example.question)
-    if accuracy_metric(example, prediction):
+    is_correct = accuracy_metric(example, prediction)
+    if is_correct:
         baseline_correct += 1
+    status = "✓" if is_correct else "✗"
+    print(f"{status} Q: {example.question[:50]}")
+    print(f"  Expected: {example.answer}")
+    print(f"  Got: {getattr(prediction, 'answer', 'N/A')}")
 
 baseline_score = baseline_correct / len(devset) if devset else 0
 print(f"Baseline accuracy: {baseline_score:.2%}")
