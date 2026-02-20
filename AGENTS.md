@@ -4,11 +4,15 @@
 
 - **Purpose**: Learn LangChain/LangGraph/LangSmith/DSPy ecosystem
 - **Language**: Python 3.10+
-- **Model**: Ollama (llama3.2) - runs locally, free
+- **Models**: Ollama (llama3.2, llama3.2:1b) - runs locally, free
 
 ## Setup
 
 ```bash
+# Install Ollama models
+ollama pull llama3.2       # For basic agent
+ollama pull llama3.2:1b    # For DSPy demo (smaller model)
+
 # Install dependencies
 make install
 

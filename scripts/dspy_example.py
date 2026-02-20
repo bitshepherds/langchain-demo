@@ -21,9 +21,13 @@ import dspy
 from dspy.teleprompt import MIPROv2
 from dspy.evaluate import answer_exact_match
 
-# Configure Ollama with llama3.2
-print("Configuring DSPy with Ollama (llama3.2)...")
-dspy.configure(lm=dspy.LM("ollama/llama3.2"))
+# Model configuration - use smaller model to demonstrate DSPy optimization
+# llama3.2:1b is ~1.3GB (smaller, needs prompt optimization)
+# llama3.2 is ~2GB (larger, already performs well)
+MODEL = "ollama/llama3.2:1b"
+
+print(f"Configuring DSPy with Ollama ({MODEL})...")
+dspy.configure(lm=dspy.LM(MODEL))
 
 
 # Define Signature (the "interface" - what we want, not how to ask)

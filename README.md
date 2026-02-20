@@ -25,8 +25,9 @@ This demo explores the modern LLM application stack through 5 progressive approa
    # Install Ollama
    curl -fsSL https://ollama.com/install.sh | sh
    
-   # Pull the model
-   ollama pull llama3.2
+   # Pull required models
+   ollama pull llama3.2          # For basic agent (2GB)
+   ollama pull llama3.2:1b     # For DSPy optimization demo (1.3GB)
    ```
 
 2. **LangSmith** (optional - for evaluation/tracing)
