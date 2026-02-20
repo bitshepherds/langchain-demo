@@ -1,4 +1,5 @@
 import os
+import sys
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,16 +10,15 @@ client = Client()
 
 DATASET_NAME = "langgraph-hello-world-golden"
 
+# Check if dataset already exists
+existing = client.read_dataset(dataset_name=DATASET_NAME)
+if existing:
+    print(f"Dataset '{DATASET_NAME}' already exists. Deleting and recreating...")
+    client.delete_dataset(dataset_id=existing.id)
+
 examples = [
-    # Simple questions (easy for baseline)
-    ("What is 5 + 7?", "12"),
-    ("What is 15 * 4?", "60"),
-    ("What is 100 * 100?", "10000"),
-    ("Who wrote Hamlet?", "Shakespeare"),
-    ("Who was the first US president?", "Washington"),
-    ("What is the capital of France?", "Paris"),
-    # Harder questions where DSPy can help optimization
-    # These require nuance, multi-step reasoning, or specific knowledge
+    # Harder questions where DSPy optimization can help
+    # These have specific edge cases, nuances, or tricky phrasing
     ("If I have 3 apples and eat 1, then buy 5 more, how many do I have?", "7"),
     ("What is the square root of 144?", "12"),
     ("Who painted the Mona Lisa?", "Leonardo da Vinci"),
@@ -27,6 +27,12 @@ examples = [
     ("Who invented the telephone?", "Alexander Graham Bell"),
     ("What is 7 to the power of 2?", "49"),
     ("In what year did man first land on the moon?", "1969"),
+    # Edge cases - tricky phrasing or specific answers
+    ("Who is the current President of the United States?", "Trump"),  # Time-sensitive
+    ("What is 123 + 456?", "579"),
+    ("What is 999 * 999?", "998001"),
+    ("What planet is known as the Red Planet?", "Mars"),
+    ("What is the largest ocean on Earth?", "Pacific"),
 ]
 
 dataset = client.create_dataset(DATASET_NAME)
